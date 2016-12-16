@@ -7,7 +7,7 @@ open BrandX.SyntaxP
 
 [<EntryPoint>]
 let main argv = 
-    test pISA "ISA*00*          *" |> printfn "%A"
+    test pISA "ISA*00*          *00*          *ZZ*MGCTLYST       *02*BLNJ           *160930*1453*U*00401*000000001*0*P*:~" |> printfn "%A"
 
     0 // return an integer exit code
 
