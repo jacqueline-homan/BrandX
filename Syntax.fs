@@ -59,15 +59,17 @@ let pAuth =
 
 // The Security Info Qualifier
 type SecQual = SQNone
+
 //ISA-03
 let pSecQual : Parser<SecQual> = stringReturn "00" SQNone .>> pFSep
 
 type SecInfo = 
     | SecInfo of string
 
+//ISA-04
 let pSecInfo : Parser<SecInfo> = anyString 2 |>> SecInfo .>> pFSep
 
-// The Security Info Qualifier and Stuff
+// The Security Info Qualifier and stuff
 type Sec = 
     { secQual : SecQual
       secInfo : SecInfo }
@@ -78,12 +80,13 @@ let pSec =
           secInfo = i })
 
 
-
 type ISA = 
-    | ISA of Auth
+    | ISA of Auth * Sec 
+
 
 let pISARec : Parser<_> = skipString "ISA" >>. pFSep
-let pISA : Parser<ISA> = pISARec >>. pAuth |>> ISA
+let pISA : Parser<ISA> = pISARec >>. pAuth .>>. pSec |>> ISA
+
 
 
 
