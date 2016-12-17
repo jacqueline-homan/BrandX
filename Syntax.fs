@@ -67,7 +67,7 @@ type SecInfo =
     | SecInfo of string
 
 //ISA-04
-let pSecInfo : Parser<SecInfo> = anyString 2 |>> SecInfo .>> pFSep
+let pSecInfo : Parser<SecInfo> = anyString 10 |>> SecInfo .>> pFSep
 
 // The Security Info Qualifier and stuff
 type Sec = 
@@ -79,15 +79,24 @@ let pSec =
         { secQual = q
           secInfo = i })
 
+// The Interchange ID Qualifier
+type InterchangeID = InterchangeID of string
 
+let pInterchgeID = anyString 2 |>> InterchangeID .>> pFSep 
+
+// The Interchange Sender ID
+type InterchgSndrID = InterchgSndrID of string 
+
+let pInterchgSndrId = anyString 15 |>> InterchgSndrID .>> pFSep
+    
 type ISA = 
-    | ISA of Auth * Sec 
+    | ISA of Auth * Sec * InterchangeID * InterchgSndrID
 
 
 let pISARec : Parser<_> = skipString "ISA" >>. pFSep
-let pISA : Parser<ISA> = pISARec >>. pAuth .>>. pSec |>> ISA
 
-
+let pISA = 
+    pISARec >>. pipe4 pAuth pSec pInterchgeID pInterchgSndrId (fun q i n x -> ISA (q, i, n, x)) 
 
 
 

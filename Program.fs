@@ -3,6 +3,7 @@ open System.IO
 open FParsec
 open BrandX.SyntaxP
 
+Console.ForegroundColor <- ConsoleColor.DarkGreen
 
 
 [<EntryPoint>]
