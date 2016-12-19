@@ -79,24 +79,29 @@ let pSec =
         { secQual = q
           secInfo = i })
 
-// The Interchange ID Qualifier
+// ISA-05: The Interchange ID Qualifier
 type InterchangeID = InterchangeID of string
 
 let pInterchgeID = anyString 2 |>> InterchangeID .>> pFSep 
 
-// The Interchange Sender ID
+// ISA-06: The Interchange Sender ID
 type InterchgSndrID = InterchgSndrID of string 
 
 let pInterchgSndrId = anyString 15 |>> InterchgSndrID .>> pFSep
+
+// ISA-07 is exactly the same as ISA-05 in the MG-EDI pdf manual
+type InterchgIdQual = InterchgIdQual of string 
+
+let pInterchgIdQual = anyString 2 |>> InterchgIdQual .>> pFSep
     
 type ISA = 
-    | ISA of Auth * Sec * InterchangeID * InterchgSndrID
+    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual
 
 
 let pISARec : Parser<_> = skipString "ISA" >>. pFSep
 
 let pISA = 
-    pISARec >>. pipe4 pAuth pSec pInterchgeID pInterchgSndrId (fun q i n x -> ISA (q, i, n, x)) 
+    pISARec >>. pipe5 pAuth pSec pInterchgeID pInterchgSndrId pInterchgIdQual (fun q i n x t -> ISA (q, i, n, x, t)) 
 
 
 
