@@ -2,9 +2,9 @@
 //  SyntaxP.fs
 //
 //  Author:
-//       evan <>
+//       Jacqueline Homan, Codecatenation, LLC
 //
-//  Copyright (c) 2016 evan
+//  Copyright (c) 2016 Jacqueline Homan
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -97,25 +97,46 @@ let pInterchgIdQual = anyString 2 |>> InterchgIdQual .>> pFSep
 //ISA-08: The Interchange Receiver ID
 type InterchgRecvrID = InterchgRecvrID of string
 
-let pInterchgRcvId = anyString 15 |>> InterchgRecvrID
+let pInterchgRcvId = anyString 15 |>> InterchgRecvrID .>> pFSep
 
 //ISA-09: Interchange Date
 type InterchgDate = InterchgDate of string 
 
-let pInterchgDate = anyString 6 |>> InterchgDate
+let pInterchgDate = anyString 6 |>> InterchgDate .>> pFSep
 
 //ISA-10: Interchange Time
 type InterchgTime = InterchgTime of string
 
-let pInterchgTime<'T,'u> = anyString 4 |>> InterchgTime
+let pInterchgTime<'T,'u> = anyString 4 |>> InterchgTime .>> pFSep
 
 //ISA-11: Interchange Control Standards Identifier
 type InterchgCtrlStds = InterchgCtrlStds of string 
 
-let pInterchgCtrlStds<'T, 'u> = anyString 1 |>> InterchgCtrlStds
-    
+let pInterchgCtrlStds<'T, 'u> = anyString 1 |>> InterchgCtrlStds .>> pFSep
+
+//ISA-12: Interchange Control Version Number
+type InterchgCtrlVerNo = InterchgCtrlVerNo of string
+
+let pInterchgCtrlVerNo = anyString 5 |>> InterchgCtrlVerNo .>> pFSep
+
+//ISA-13: Interchange Control Number
+type InterchgCtrlNo = InterchgCtrlNo of string
+
+let pInterchgCtrlNo = anyString 9 |>> InterchgCtrlNo .>> pFSep
+
+//ISA-14: Acknowledgement Requested
+type AckReq = AckReq of string 
+
+let pAckReq = anyString 1 |>> AckReq .>> pFSep   
+
+//ISA-15: Usage Indicator
+type UsageInd = UsageInd of string
+
+let pUsageInd = anyString 1 |>> UsageInd .>> pFSep
+
+
 type ISA = 
-    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds
+    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds * InterchgCtrlVerNo * InterchgCtrlNo * AckReq * UsageInd
 
 
 let pISARec : Parser<_> = skipString "ISA" >>. pFSep
@@ -139,7 +160,15 @@ let pISA =
                                 >>= fun h ->
                                     pInterchgCtrlStds
                                     >>= fun i ->
-                        preturn (ISA(a, b, c, d, e, f, g, h, i))
+                                        pInterchgCtrlVerNo
+                                        >>= fun j ->
+                                            pInterchgCtrlNo
+                                            >>= fun k -> 
+                                                pAckReq
+                                                >>= fun l ->
+                                                    pUsageInd
+                                                    >>= fun m -> 
+                                            preturn (ISA(a, b, c, d, e, f, g, h, i, j, k, l, m))
 
 
 

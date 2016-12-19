@@ -1,0 +1,5 @@
+/home/jacque/Projects/F-sharp/BrandX/BrandX/obj/x86/Release/.NETFramework,Version=v4.5.1.AssemblyAttribute.fs
+/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Release/BrandX.exe
+/home/jacque/Projects/F-sharp/BrandX/BrandX/obj/x86/Release/BrandX.exe
+/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Release/FParsec.dll
+/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Release/FParsecCS.dll
