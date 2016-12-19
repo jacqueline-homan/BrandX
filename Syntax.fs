@@ -1,10 +1,8 @@
 ﻿//
-//  SyntaxP.fs
-//
 //  Author:
-//       Jacqueline Homan, Codecatenation, LLC
+//       evan <>
 //
-//  Copyright (c) 2016 Jacqueline Homan
+//  Copyright (c) 2016 evan
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -134,12 +132,14 @@ type UsageInd = UsageInd of string
 
 let pUsageInd = anyString 1 |>> UsageInd .>> pFSep
 
+//ISA-16: Component Element Separator. Since this is not a data structure, we only need a function.
+let pElSep : Parser<_> = skipChar ':'
 
 type ISA = 
     | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds * InterchgCtrlVerNo * InterchgCtrlNo * AckReq * UsageInd
 
 
-let pISARec : Parser<_> = skipString "ISA" >>. pFSep
+let pISARec : Parser<_> = skipString "ISA" >>. pFSep 
 
 let pISA = 
     pISARec >>. pAuth 
@@ -168,7 +168,8 @@ let pISA =
                                                 >>= fun l ->
                                                     pUsageInd
                                                     >>= fun m -> 
-                                            preturn (ISA(a, b, c, d, e, f, g, h, i, j, k, l, m))
+
+                                            preturn (ISA(a, b, c, d, e, f, g, h, i, j, k, l, m)) 
 
 
 
