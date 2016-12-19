@@ -93,20 +93,57 @@ let pInterchgSndrId = anyString 15 |>> InterchgSndrID .>> pFSep
 type InterchgIdQual = InterchgIdQual of string 
 
 let pInterchgIdQual = anyString 2 |>> InterchgIdQual .>> pFSep
+
+//ISA-08: The Interchange Receiver ID
+type InterchgRecvrID = InterchgRecvrID of string
+
+let pInterchgRcvId = anyString 15 |>> InterchgRecvrID
+
+//ISA-09: Interchange Date
+type InterchgDate = InterchgDate of string 
+
+let pInterchgDate = anyString 6 |>> InterchgDate
+
+//ISA-10: Interchange Time
+type InterchgTime = InterchgTime of string
+
+let pInterchgTime<'T,'u> = anyString 4 |>> InterchgTime
+
+//ISA-11: Interchange Control Standards Identifier
+type InterchgCtrlStds = InterchgCtrlStds of string 
+
+let pInterchgCtrlStds<'T, 'u> = anyString 1 |>> InterchgCtrlStds
     
 type ISA = 
-    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual
+    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds
 
 
 let pISARec : Parser<_> = skipString "ISA" >>. pFSep
 
 let pISA = 
-    pISARec >>. pipe5 pAuth pSec pInterchgeID pInterchgSndrId pInterchgIdQual (fun q i n x t -> ISA (q, i, n, x, t)) 
-
+    pISARec >>. pAuth 
+    >>= fun a -> 
+        pSec 
+        >>= fun b -> 
+            pInterchgeID 
+            >>= fun c -> 
+                pInterchgSndrId 
+                >>= fun d ->
+                    pInterchgIdQual
+                    >>= fun e ->
+                        pInterchgRcvId
+                        >>= fun f -> 
+                            pInterchgDate
+                            >>= fun g ->
+                                pInterchgTime
+                                >>= fun h ->
+                                    pInterchgCtrlStds
+                                    >>= fun i ->
+                        preturn (ISA(a, b, c, d, e, f, g, h, i))
 
 
 
 let test p str = 
     match run p str with
-    | Success(result, _, _) -> printfn "Success: %A" result
+    | Success(result, _, _) -> printfn "%A" result
     | Failure(errorMsg, _, _) -> printfn "Failure: %s" errorMsg
