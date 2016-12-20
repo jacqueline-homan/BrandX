@@ -1,7 +1,0 @@
-/home/jacque/Projects/F-sharp/BrandX/BrandX/obj/x86/Debug/.NETFramework,Version=v4.5.1.AssemblyAttribute.fs
-/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Debug/BrandX.exe.mdb
-/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Debug/BrandX.exe
-/home/jacque/Projects/F-sharp/BrandX/BrandX/obj/x86/Debug/BrandX.exe
-/home/jacque/Projects/F-sharp/BrandX/BrandX/obj/x86/Debug/BrandX.exe.mdb
-/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Debug/FParsec.dll
-/home/jacque/Projects/F-sharp/BrandX/BrandX/bin/Debug/FParsecCS.dll
