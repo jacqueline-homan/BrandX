@@ -2,6 +2,7 @@
 open System.IO
 open FParsec
 open BrandX.ISA
+open BrandX.Structures
 
 Console.ForegroundColor <- ConsoleColor.Cyan
 
