@@ -124,9 +124,6 @@ type UsageInd = UsageInd of string
 
 let pUsageInd = anyString 1 |>> UsageInd .>> pFSep
 
-//ISA-16: Component Element Separator. Since this is not a data structure, we only need a function.
-let pElSep : Parser<_> = skipChar ':'
-
 type ISA =
     | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds * InterchgCtrlVerNo * InterchgCtrlNo * AckReq * UsageInd
 
