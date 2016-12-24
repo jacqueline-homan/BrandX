@@ -52,8 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="ISA.fs" />
     <Compile Include="Structures.fs" />
+    <Compile Include="ISA.fs" />
+    <Compile Include="GS.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>

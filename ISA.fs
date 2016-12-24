@@ -19,19 +19,11 @@
 module BrandX.ISA
 
 open FParsec
-
+open BrandX.Structures
 // Parse a record like:
 //
 //     ISA*00*          *00*          *ZZ*MGCTLYST       *02*BLNJ           *160930*1453*U*00401*000000001*0*P*:
 //
-// Into a record type tag and then a sequence of fields
-type Parser<'t> = Parser<'t, unit>
-
-// The field separator
-let pFSep : Parser<_> = skipChar '*'
-
-// The record delimiter
-let pRSep : Parser<_> = skipChar '~'
 
 // The Authorization Qualifier
 type AuthQual = AQNone
@@ -168,6 +160,7 @@ let pISA =
                                                     preturn (ISA(a, b, c, d, e, f, g, h, i, j, k, l, m))
 
 let pISARec = skipString "ISA" >>. pFSep >>. pISA .>> pElSep .>> pRSep
+//let pISARec = pstring @"/home/jacque/Projects/F-sharp/BrandX/BrandX/204-MGCTLYST-BLNJ-16542577549-2.txt" >>. pFSep >>. pISA .>> pElSep .>> pRSep
 
 let test p str =
     match run p str with
