@@ -25,16 +25,16 @@ open BrandX.Structures
 //     ISA*00*          *00*          *ZZ*MGCTLYST       *02*BLNJ           *160930*1453*U*00401*000000001*0*P*:
 //
 
-// The Authorization Qualifier
+// ISA-01: The Authorization Qualifier
 type AuthQual = AQNone
 
-// ISA-01: We only have one of these anyway
+//  We only have one of these anyway
 let pAuthQual : Parser<AuthQual> = stringReturn "00" AQNone .>> pFSep
 
+//ISA-02: this is 10 chars, may be whitespace
 type AuthInfo =
     | AuthInfo of string
 
-//ISA-02: this is 10 chars, may be whitespace
 let pAuthInfo : Parser<AuthInfo> = anyString 10 |>> AuthInfo .>> pFSep
 
 // The Authorization Qualifier and Info
