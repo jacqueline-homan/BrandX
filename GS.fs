@@ -66,3 +66,12 @@ type RspAgyCode =
 let pRspAgyCode = skipString "X" >>. preturn AccredStdsCmteX12 >>. pFSep
 
 let pAgyCode<'T,'u> = manyMinMaxSatisfy 1 2 Char.IsUpper
+
+//GS-08: Version/Release/Industry Indentifier Code
+type VRIIcode =
+    | DraftStds 
+
+let pVRIIcode = skipString "00410" >>. preturn DraftStds >>. pFSep
+
+let pVcode<'T,'u> = manyMinMaxSatisfy 1 12 Char.IsNumber
+
