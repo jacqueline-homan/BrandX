@@ -55,11 +55,12 @@
     <Compile Include="Structures.fs" />
     <Compile Include="ISA.fs" />
     <Compile Include="GS.fs" />
+    <Compile Include="EDI.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="204-MGCTLYST-BLNJ-16542577549-2.txt" />
+    <None Include="204-MGCTLYST-BLNJ-16542577549-1.txt" />
   </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />
 </Project>

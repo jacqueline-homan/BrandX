@@ -1,31 +1,68 @@
 ﻿module BrandX.GS
+
 open System
 open System.Collections.Generic
 open System.IO
 open FParsec
 open BrandX.Structures
 
+// GS*SM*MGCTLYST*BLNJ*20160930*145316*1*X*004010~
 
-//The Functional Group Header
-type FuncIdCode = SomeSM
+// GS-01: Functional Identifier Code, 2 chars, "SM"
+type FuncIdCode =
+    | MotorCarrierLoadTender
 
-//GS-01: Functional Identifier Code
-let pFuncIdCode : Parser<FuncIdCode> = stringReturn "SM" SomeSM .>> pFSep
+let pFuncIdCode = skipString "SM" >>. preturn MotorCarrierLoadTender .>> pFSep
 
-//The Function Identifier and CodeList Summary data
-type GSFunc = {funcIdCode : FuncIdCode}
+let pRouteCode = manyMinMaxSatisfy 2 15 Char.IsUpper
 
-//GS-02: Application Sender Code
-type AppSndrCode = 
+//GS-02: Application Sender Code, 2 chars
+type AppSndrCode =
     | AppSndrCode of string
 
-let pSdr : Parser<AppSndrCode> = anyString 2 |>> AppSndrCode .>> pFSep
+let pSdr : Parser<AppSndrCode> = pRouteCode |>> AppSndrCode .>> pFSep
 
 //GS-03: Application Receiver Code
-type AppRecvrCode = 
-    | AppRecvrCode of string list
+type AppRecvrCode =
+    | AppRecvrCode of string
 
-//let pRcvr : Parser<AppRecvrCode> = manyRA [2..15] |>> AppRecvrCode .>> pFSep
+let pRcvr : Parser<AppRecvrCode> = pRouteCode |>> AppRecvrCode .>> pFSep
 
+//Handling the relationship set between Sender and Receiver
+type Routing = { appSdndrCode : AppSndrCode
+                 AppRecvrCode : AppRecvrCode }
 
-//TODO let pGSRec = skipString "GS" >>. pFSep >>. pGS .>> pElSep .>> pRSep
+let pRouting = pipe2 pSdr pRcvr (fun s r -> (s, r))
+
+type GSRec = { funcIdCode : FuncIdCode
+               routing : Routing}                 
+
+let pGSRec =
+    skipString "GS" >>. pFSep >>. pFuncIdCode 
+    >>= fun fid -> 
+        pRouting 
+        >>= fun rte -> 
+            preturn (fid, rte)
+
+//GS-04: Date of transaction
+type Date = Date of string 
+
+let pdate = anyString 8 |>> Date >>. pFSep
+
+//GS-05: Time of transaction
+type Time = Time of string 
+
+let ptime = manyMinMaxSatisfy 4 8  Char.IsDigit >>. pFSep
+
+//GS-06: Group Control Number
+type GrpCtrlNo = GrpCtrlNo of string 
+
+let pGrpCtlNo = manyMinMaxSatisfy 1 9 Char.IsDigit >>. pFSep
+
+//GS-07: Responsible Agency Code
+type RspAgyCode = 
+    | AccredStdsCmteX12
+
+let pRspAgyCode = skipString "X" >>. preturn AccredStdsCmteX12 >>. pFSep
+
+let pAgyCode<'T,'u> = manyMinMaxSatisfy 1 2 Char.IsUpper

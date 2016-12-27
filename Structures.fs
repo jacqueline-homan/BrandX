@@ -17,6 +17,7 @@ let pElSep : Parser<_> = skipChar ':'
 
 //Parser function for handling a range, which is needed for GS-03 which has a
 //min/max number of characters from 2-15
+(*
 let manyRA p =
   // the compiler expands the call to Inline.Many to an optimized sequence parser
   Inline.Many(elementParser = p,
@@ -27,3 +28,6 @@ let manyRA p =
               foldState = (fun ra x -> ra.Add(x); ra),
               resultFromState = (fun ra -> ra),
               resultForEmptySequence = (fun () -> ResizeArray<_>()))
+*)
+
+
