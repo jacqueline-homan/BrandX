@@ -20,6 +20,8 @@ module BrandX.ISA
 
 open FParsec
 open BrandX.Structures
+open System
+
 // Parse a record like:
 //
 //     ISA*00*          *00*          *ZZ*MGCTLYST       *02*BLNJ           *160930*1453*U*00401*000000001*0*P*:
@@ -89,15 +91,10 @@ type InterchgRecvrID = InterchgRecvrID of string
 
 let pInterchgRcvId = anyString 15 |>> InterchgRecvrID .>> pFSep
 
-//ISA-09: Interchange Date
-type InterchgDate = InterchgDate of string
+//ISA-09/ISA-10: Interchange Date/Time
+type InterchgDateTime = InterchgDateTime of DateTime
 
-let pInterchgDate = anyString 6 |>> InterchgDate .>> pFSep
-
-//ISA-10: Interchange Time
-type InterchgTime = InterchgTime of string
-
-let pInterchgTime<'T,'u> = anyString 4 |>> InterchgTime .>> pFSep
+let pInterchgDateTime = pDateTime |>> InterchgDateTime
 
 //ISA-11: Interchange Control Standards Identifier
 type InterchgCtrlStds = InterchgCtrlStds of string
@@ -125,7 +122,7 @@ type UsageInd = UsageInd of string
 let pUsageInd = anyString 1 |>> UsageInd .>> pFSep
 
 type ISA =
-    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDate * InterchgTime * InterchgCtrlStds * InterchgCtrlVerNo * InterchgCtrlNo * AckReq * UsageInd
+    | ISA of Auth * Sec * InterchangeID * InterchgSndrID * InterchgIdQual * InterchgRecvrID * InterchgDateTime * InterchgCtrlStds * InterchgCtrlVerNo * InterchgCtrlNo * AckReq * UsageInd
 
 let pISA =
     pAuth
@@ -140,11 +137,9 @@ let pISA =
                     >>= fun e ->
                         pInterchgRcvId
                         >>= fun f ->
-                            pInterchgDate
+                            pInterchgDateTime
                             >>= fun g ->
-                                pInterchgTime
-                                >>= fun h ->
-                                    pInterchgCtrlStds
+                                pInterchgCtrlStds
                                     >>= fun i ->
                                         pInterchgCtrlVerNo
                                         >>= fun j ->
@@ -154,12 +149,6 @@ let pISA =
                                                 >>= fun l ->
                                                     pUsageInd
                                                     >>= fun m ->
-                                                    preturn (ISA(a, b, c, d, e, f, g, h, i, j, k, l, m))
+                                                    preturn (ISA(a, b, c, d, e, f, g, i, j, k, l, m))
 
 let pISARec = skipString "ISA" >>. pFSep >>. pISA .>> pElSep .>> pRSep
-//let pISARec = pstring @"/home/jacque/Projects/F-sharp/BrandX/BrandX/204-MGCTLYST-BLNJ-16542577549-2.txt" >>. pFSep >>. pISA .>> pElSep .>> pRSep
-
-let test p str =
-    match run p str with
-    | Success(result, _, _) -> printfn "%A" result
-    | Failure(errorMsg, _, _) -> printfn "Failure: %s" errorMsg
