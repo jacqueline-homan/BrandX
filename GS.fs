@@ -28,22 +28,6 @@ type AppRecvrCode =
 
 let pRcvr : Parser<AppRecvrCode> = pRouteCode |>> AppRecvrCode .>> pFSep
 
-//Handling the relationship set between Sender and Receiver
-type Routing = { appSdndrCode : AppSndrCode
-                 AppRecvrCode : AppRecvrCode }
-
-let pRouting = pipe2 pSdr pRcvr (fun s r -> (s, r))
-
-type GSRec = { funcIdCode : FuncIdCode
-               routing : Routing}                 
-
-let pGSRec =
-    skipString "GS" >>. pFSep >>. pFuncIdCode 
-    >>= fun fid -> 
-        pRouting 
-        >>= fun rte -> 
-            preturn (fid, rte)
-
 //GS-04: Date of transaction
 type Date = Date of string 
 
@@ -74,4 +58,46 @@ type VRIIcode =
 let pVRIIcode = skipString "00410" >>. preturn DraftStds >>. pFSep
 
 let pVcode<'T,'u> = manyMinMaxSatisfy 1 12 Char.IsNumber
+
+
+//Handling the relationship set between Sender and Receiver
+type Routing = { appSdndrCode : AppSndrCode
+                 AppRecvrCode : AppRecvrCode }
+
+let pRouting = pipe2 pSdr pRcvr (fun s r -> (s, r))
+
+type GSRec = { funcIdCode : FuncIdCode
+               routing : Routing}                 
+
+let pGSRec =
+    skipString "GS" >>. pFSep >>. pFuncIdCode 
+    >>= fun fid -> 
+        pRouting 
+        >>= fun rte -> 
+            preturn (fid, rte)
+
+type GS = GS of FuncIdCode * AppSndrCode * AppRecvrCode * Date * Time * GrpCtrlNo * RspAgyCode * VRIIcode * Routing * GSRec
+
+let pGS =
+    pFuncIdCode
+    >>= fun a -> 
+        pSdr  
+        >>= fun b ->
+            pRcvr
+            >>= fun c -> 
+                pdate
+                >>= fun d ->
+                    ptime
+                    >>= fun e ->
+                        pGrpCtlNo
+                        >>= fun f -> 
+                            pRspAgyCode
+                            >>= fun g ->
+                                pVRIIcode
+                                >>= fun h ->
+                                    pRouteCode
+                                    >>= fun i ->
+                                        pGSRec
+                                        preturn (GS (a, b, c, d, e, f, g, h, i))
+
 
