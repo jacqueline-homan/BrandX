@@ -64,12 +64,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="ScatchWork.fsx" />
   </ItemGroup>
   <Import Project="$(FSharpTargetsPath)" />
-  <ItemGroup>
-    <EmbeddedResource Include="204-MGCTLYST-BLNJ-16542577549-2.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <LogicalName>BrandX.EDI</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>
