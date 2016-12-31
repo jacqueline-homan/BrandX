@@ -10,13 +10,13 @@ open BrandX.Structures
 type TrnsSetIdCode = 
     | MotorCarrierLoadTender
 
-let pTrnsSetIdCode : Parser<TrnsSetIdCode> = skipString "M" >>. preturn MotorCarrierLoadTender .>> pFSep
+let pTrnsSetIdCode : Parser<TrnsSetIdCode> = skipString "204" >>. preturn MotorCarrierLoadTender //.>> pFSep
 
 //ST-02
 type TrnSetCtrlNo = 
     | TrnSetCtrlNo of string 
 
-let pCode : Parser<TrnSetCtrlNo> = anyString 3 |>> TrnSetCtrlNo .>> pFSep
+let pCode : Parser<TrnSetCtrlNo> = anyString 3 |>> TrnSetCtrlNo //.>> pRSep
 
 type TransCode =
     { idCode : TrnsSetIdCode
@@ -34,9 +34,11 @@ type ST = ST of TrnsSetIdCode * TrnSetCtrlNo * TransCode
 let pST = 
     skipString "ST" >>. pFSep >>. pTrnsSetIdCode
     >>= fun p -> 
-        pctrl 
-        >>= fun t ->
-            pTransCode
+        pCode
+        >>= fun q ->
+            pctrl
             >>= fun r ->
-                preturn (ST(p, t, r))
+                pTransCode
+                >>= fun s ->
+                preturn (ST(p, q, s))
     
