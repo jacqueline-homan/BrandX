@@ -24,14 +24,3 @@ let pST =
         pTctrlNo
         >>= fun ctrl -> 
             preturn (ST(id, ctrl))
-(*
-let pST = 
-    skipString "ST" >>. pFSep 
-    >>= fun _ -> 
-        pTsId
-        >>= fun id ->
-            pTctrlNo 
-            >>= fun ctrl ->
-                preturn (ST(id, ctrl))
-
-*) 

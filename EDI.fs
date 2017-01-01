@@ -6,4 +6,4 @@ open BrandX.ST
 open BrandX.B2
 open FParsec
 
-let pEDI = pipe3 pISARec pGS pST (fun i g h -> (i, g, h))
+let pEDI = pipe3 pISARec pGS pST (fun i g s -> (i, g, s))
