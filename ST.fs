@@ -17,8 +17,16 @@ type TctrlNo =
 let pTctrlNo : Parser<TctrlNo> = manyMinMaxSatisfy 4 9 (fun c -> isDigit c ) |>> TctrlNo .>> pRSep  
 
 type ST = ST of TsID * TctrlNo 
+
 let pST = 
-    skipString "ST" >>. pFSep
+    skipString "ST" >>. pFSep >>. pTsId
+    >>= fun id ->
+        pTctrlNo
+        >>= fun ctrl -> 
+            preturn (ST(id, ctrl))
+(*
+let pST = 
+    skipString "ST" >>. pFSep 
     >>= fun _ -> 
         pTsId
         >>= fun id ->
@@ -26,4 +34,4 @@ let pST =
             >>= fun ctrl ->
                 preturn (ST(id, ctrl))
 
- 
+*) 

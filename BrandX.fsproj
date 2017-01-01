@@ -56,6 +56,7 @@
     <Compile Include="ISA.fs" />
     <Compile Include="GS.fs" />
     <Compile Include="ST.fs" />
+    <Compile Include="B2.fs" />
     <Compile Include="EDI.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
