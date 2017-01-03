@@ -18,11 +18,14 @@ let pSetPurpCode : Parser<SetPurpCode> =
      <|> (skipString "04" >>? preturn Change)) .>> pFSep
 
 type AppType =
-    | AppType of string
+    | LoadTender
 
-let pAppType : Parser<AppType option> = opt (anyString 2 |>> AppType)
+let pAppType : Parser<AppType option> =
+    opt (skipString "LT" >>. preturn LoadTender)
 
-type B2A = SetPurpCode * AppType option
+type B2A =
+    | B2A of SetPurpCode * Option<AppType>
 
 let pB2A : Parser<B2A> =
-    skipString "B2A" >>. pFSep >>. tuple2 pSetPurpCode pAppType .>> pRSep
+    skipString "B2A" >>. pFSep >>. tuple2 pSetPurpCode pAppType |>> B2A
+    .>> pRSep
