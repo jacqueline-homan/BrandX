@@ -8,6 +8,8 @@ type Parser<'t> = Parser<'t, unit>
 
 // The field separator
 let pFSep : Parser<_> = skipChar '*'
+// Optional fields are separated by two '*'
+let pOFSep : Parser<_> = skipString "**"
 // The record delimiter
 let pRSep : Parser<_> = skipChar '~'
 // Parse either separator
