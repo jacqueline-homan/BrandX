@@ -13,16 +13,16 @@ type SetPurpCode =
     | Change 
 
 let pSetPurpCode : Parser<SetPurpCode> =
-    (skipString "00" >>? preturn Original)
+    ((skipString "00" >>? preturn Original)
     <|> (skipString "01" >>? preturn Cancellation)
-    <|> (skipString "04" >>? preturn Change)
+    <|> (skipString "04" >>? preturn Change)) .>> pFSep
 
 type AppType = 
     | AppType of string
 
 let pAppType : Parser<Option<AppType>> = 
     opt 
-        (anyString 2 |>> AppType) .>> pFSep
+        (anyString 2 |>> AppType) 
 
 type B2A = SetPurpCode * Option<AppType> 
 
