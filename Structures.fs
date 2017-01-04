@@ -19,6 +19,7 @@ let pElSep : Parser<_> = skipChar ':'
 
 let pPSep : Parser<_> = skipChar '.'
 
+let ws = spaces
 
 let pNbr l = manyMinMaxSatisfy l l isDigit .>> pASep
 let invInf = System.Globalization.DateTimeFormatInfo.InvariantInfo
