@@ -11,7 +11,7 @@ type RefCode =
 
 let pRefCode : Parser<Option<RefCode>> =
     opt
-        (anyString 3 |>> RefCode) .>> pPSep .>> ws .>> pPSep
+        (anyString 3 |>> RefCode) //.>> ws //.>> pPSep //.>> ws .>> pPSep
 
 type Description =
     | Description of string 
