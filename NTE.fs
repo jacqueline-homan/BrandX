@@ -6,15 +6,15 @@ open System.Collections.Generic
 open FParsec
 open BrandX.Structures
 
-type RefCode = 
+type RefCode =
     | RefCode of string
 
 let pRefCode : Parser<Option<RefCode>> =
     opt
-        (anyString 3 |>> RefCode) //.>> ws //.>> pPSep //.>> ws .>> pPSep
+        (anyString 3 |>> RefCode) .>> pPSep .>> ws .>> pPSep
 
 type Description =
-    | Description of string 
+    | Description of string
 
 let pDescription : Parser<Description> =
     manyMinMaxSatisfy 1 80 (fun c -> isDigit c || isAsciiLetter c || isHex c) |>> Description .>> pRSep
@@ -22,9 +22,9 @@ let pDescription : Parser<Description> =
 
 type NTE = NTE of Option<RefCode> * Description
 
-let pNTE = 
+let pNTE =
     skipString "NTE" .>> pOFSep >>. pRefCode
     >>= fun d ->
         pDescription
         >>= fun n ->
-            preturn (NTE(d, n)) 
+            preturn (NTE(d, n))
