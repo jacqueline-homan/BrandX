@@ -16,6 +16,10 @@ let pRSep : Parser<_> = skipChar '~'
 let pASep = (attempt pFSep) <|> (attempt pRSep)
 //ISA-16: Component Element Separator. Since this is not a data structure, we only need a function.
 let pElSep : Parser<_> = skipChar ':'
+
+let pPSep : Parser<_> = skipChar '.'
+
+
 let pNbr l = manyMinMaxSatisfy l l isDigit .>> pASep
 let invInf = System.Globalization.DateTimeFormatInfo.InvariantInfo
 
@@ -36,3 +40,5 @@ let pTime : Parser<DateTime> =
     (attempt (pTryDate "HHmm")) <|> (attempt (pTryDate "HHmmss"))
 let pDateTime = 
     pDate >>= fun d -> pTime >>= fun t -> preturn (d.Add(t.TimeOfDay))
+
+

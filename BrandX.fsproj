@@ -58,6 +58,7 @@
     <Compile Include="ST.fs" />
     <Compile Include="B2.fs" />
     <Compile Include="B2A.fs" />
+    <Compile Include="NTE.fs" />
     <Compile Include="EDI.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
