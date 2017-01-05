@@ -1,30 +1,28 @@
 ﻿module BrandX.NTE
 
-open System
-open System.IO
-open System.Collections.Generic
-open FParsec
 open BrandX.Structures
+open FParsec
+open System
+open System.Collections.Generic
+open System.IO
 
 type RefCode =
-    | RefCode of string
+    | RefCode of uint16
 
-let pRefCode : Parser<Option<RefCode>> =
-    opt
-        (anyString 3 |>> RefCode) .>> pPSep .>> ws .>> pPSep
+let pRefCode : Parser<RefCode option> =
+    (opt
+         (manyMinMaxSatisfy 3 3 isDigit
+          |>> (fun rc -> UInt16.Parse(rc) |> RefCode))) .>> pFSep
 
-type Description =
-    | Description of string
+type NTEDescription =
+    | NTEDescription of string
 
-let pDescription : Parser<Description> =
-    manyMinMaxSatisfy 1 80 (fun c -> isDigit c || isAsciiLetter c || isHex c) |>> Description .>> pRSep
+let pDescription : Parser<NTEDescription> =
+    manyMinMaxSatisfy 1 80 (isNoneOf "~") |>> NTEDescription
 
+type NTE =
+    | NTE of RefCode option * NTEDescription
 
-type NTE = NTE of Option<RefCode> * Description
-
-let pNTE =
-    skipString "NTE" .>> pOFSep >>. pRefCode
-    >>= fun d ->
-        pDescription
-        >>= fun n ->
-            preturn (NTE(d, n))
+let pNTE : Parser<NTE> =
+    skipString "NTE" >>. pFSep >>. tuple2 pRefCode pDescription |>> NTE
+    .>> pRSep
