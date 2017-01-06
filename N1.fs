@@ -25,10 +25,10 @@ let pIdCode : Parser<_> = manyMinMaxSatisfy 2 80 (isNoneOf "*~") |>> IdCode .>> 
 
 
 type N1 =
-    | N1 of Entity * Name //* IdQual //* IdCode
+    | N1 of Entity * Name * IdQual //* IdCode
 
 let pN1 : Parser<_> = 
-    skipString "N1" >>. pFSep >>. tuple2 (pEntity >>. pFSep) pName |>> N1
+    skipString "N1" >>. pFSep >>. tuple3 (pEntity .>> pFSep) pName pIdQual|>> N1
     (*
         >>= fun n ->
             pName 
