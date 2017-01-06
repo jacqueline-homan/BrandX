@@ -8,7 +8,7 @@ open BrandX.Structures
 type AddressInfo =
     | AddressInfo of string
 
-let pAddy : Parser<AddressInfo> = manyMinMaxSatisfy 1 55 (isNoneOf "*~") |>> AddressInfo .>> pFSep
+let pAddy : Parser<AddressInfo> = manyMinMaxSatisfy 1 55 (isNoneOf "*~") |>> AddressInfo //.>> pFSep
 
 type Details = 
     | Details of string 
