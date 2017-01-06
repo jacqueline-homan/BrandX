@@ -23,7 +23,6 @@ type IdCode =
 
 let pIdCode : Parser<IdCode> = manyMinMaxSatisfy 2 80 (isNoneOf "*~") |>> IdCode .>> pRSep
 
-
 type N1 =
     | N1 of Entity * Name * IdQual * IdCode
 
