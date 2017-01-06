@@ -7,11 +7,12 @@ open BrandX.ISA
 open BrandX.NTE
 open BrandX.ST
 open BrandX.N1
+open BrandX.N3
 open BrandX.IEA
 open FParsec
 
 type EDI = 
-    | EDI of ISA * GS * ST * B2 * B2A * NTE * N1
+    | EDI of ISA * GS * ST * B2 * B2A * NTE * N1 * N3
 
 let pEDI = 
     pISARec 
@@ -28,4 +29,6 @@ let pEDI =
                         >>= fun f -> 
                             pN1
                             >>= fun g -> 
-                                preturn (EDI(a, b, c, d, e, f, g))
+                                pN3
+                                >>= fun h ->
+                                    preturn (EDI(a, b, c, d, e, f, g, h))
