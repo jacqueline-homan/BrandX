@@ -7,28 +7,28 @@ open BrandX.Structures
 
 type Entity = 
     | Entity of string
-let pEntity : Parser<_> = manyMinMaxSatisfy 2 3 isAsciiLetter |>> Entity .>> pFSep
+let pEntity : Parser<Entity> = manyMinMaxSatisfy 2 3 isAsciiLetter |>> Entity //.>> pFSep
 
 type Name =
     | Name of string
-let pName : Parser<_> = manyMinMaxSatisfy 1 60 (isNoneOf "*~") |>> Name .>> pFSep
+let pName : Parser<Name> = manyMinMaxSatisfy 1 60 (isNoneOf "*~") |>> Name //.>> pFSep
 
 type IdQual =
     | IdQual of string
 
-let pIdQual : Parser<_> = manyMinMaxSatisfy 1 2 isDigit |>> IdQual .>> pFSep
+let pIdQual : Parser<IdQual> = manyMinMaxSatisfy 1 2 isDigit |>> IdQual //.>> pFSep
 
 type IdCode =
     | IdCode of string 
 
-let pIdCode : Parser<_> = manyMinMaxSatisfy 2 80 (isNoneOf "*~") |>> IdCode .>> pFSep
+let pIdCode : Parser<IdCode> = manyMinMaxSatisfy 2 80 (isNoneOf "*~") |>> IdCode //.>> pFSep
 
 
 type N1 =
-    | N1 of Entity * Name * IdQual //* IdCode
+    | N1 of Entity * Name * IdQual * IdCode
 
-let pN1 : Parser<_> = 
-    skipString "N1" >>. pFSep >>. tuple3 (pEntity .>> pFSep) pName pIdQual|>> N1
+let pN1 : Parser<N1> = 
+    skipString "N1" >>. pFSep >>. tuple4 (pEntity .>> pFSep) ( pName .>> pFSep) (pIdQual .>> pFSep) (pIdCode .>> pRSep)|>> N1
     (*
         >>= fun n ->
             pName 
