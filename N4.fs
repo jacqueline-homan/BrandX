@@ -9,30 +9,37 @@ open BrandX.Structures
 type City = 
     | City of string
 
-let pCity : Parser<City> =
-    manyMinMaxSatisfy 2 30 (isNoneOf "*~") |>> City .>> pFSep
+let pCity : Parser<City option> =
+    (opt
+        (manyMinMaxSatisfy 2 30 (isNoneOf "*~") |>> City)) .>> pFSep
 
 type State =
     | State of string
 
-let pState : Parser<State> = anyString 2 |>> State .>> pFSep
+let pState : Parser<State option> = 
+    (opt 
+        (anyString 2 |>> State)) .>> pFSep
 
 type Zipcode =
     | Zipcode of string
 
-let pZip : Parser<Zipcode> = manyMinMaxSatisfy 3 15 (isNoneOf"*~.,':; ' '") |>> Zipcode .>> pFSep
+let pZip : Parser<Zipcode option> = 
+    (opt
+        (manyMinMaxSatisfy 3 15 (isNoneOf"*~.,':;' '") |>> Zipcode)) .>> pFSep
 
 type Country = 
     | Country of string
 
-let pCountry : Parser<Country> = manyMinMaxSatisfy 2 3 isAsciiLetter |>> Country .>> pRSep
+let pCountry : Parser<Country option> =
+    (opt 
+        (manyMinMaxSatisfy 2 3 isAsciiLetter |>> Country)) //.>> pFSep
 
 
 type AddressInfo = 
-    { city : City
-      state : State
-      zip : Zipcode
-      country : Country}
+    { city : City option
+      state : State option
+      zip : Zipcode option
+      country : Country option}
 
 let pAddInf = 
     pipe4 pCity pState pZip pCountry (fun m s z c ->
@@ -42,7 +49,7 @@ let pAddInf =
          country = c})
 
 type N4 = 
-    | N4 of AddressInfo * City * State * Zipcode * Country //City * State * Zipcode * Country
+    | N4 of AddressInfo * City option * State option * Zipcode option * Country option //City * State * Zipcode * Country
 
 let pN4 =
     pAddInf
@@ -57,7 +64,7 @@ let pN4 =
                     >>= fun e ->
                         preturn (N4(a,b,c,d,e))
 
-
+let pN4record = skipString "N4" .>> pFSep >>. pN4 .>> pRSep 
 (*
     skipString "N4" >>. pFSep >>. pCity
     >>= fun a ->
@@ -71,4 +78,4 @@ let pN4 =
     
 *)
 
-let pN4record = skipString "N4" >>. pFSep .>> pAddInf .>> pRSep 
+ 
