@@ -17,19 +17,58 @@ type State =
 
 let pState : Parser<State> = anyString 2 |>> State .>> pFSep
 
-let pZip : Parser<_> = manyMinMaxSatisfy 3 15 (isNoneOf"*~.,':; ' '") .>> pFSep
+type Zipcode =
+    | Zipcode of string
 
-let pCountry : Parser<_> = manyMinMaxSatisfy 2 3 isAsciiLetter .>> pRSep
+let pZip : Parser<Zipcode> = manyMinMaxSatisfy 3 15 (isNoneOf"*~.,':; ' '") |>> Zipcode .>> pFSep
+
+type Country = 
+    | Country of string
+
+let pCountry : Parser<Country> = manyMinMaxSatisfy 2 3 isAsciiLetter |>> Country .>> pRSep
+
+
+type AddressInfo = 
+    { city : City
+      state : State
+      zip : Zipcode
+      country : Country}
+
+let pAddInf = 
+    pipe4 pCity pState pZip pCountry (fun m s z c ->
+        {city = m
+         state = s
+         zip = z
+         country = c})
 
 type N4 = 
-    | N4 of City * State
+    | N4 of AddressInfo * City * State * Zipcode * Country //City * State * Zipcode * Country
 
-let pN4 : Parser<N4> =
-    //skipString "N4" >>. pFSep >>. pCity |>> N4//|>> fun _ -> N4
+let pN4 =
+    pAddInf
+    >>= fun a -> 
+        pCity
+        >>= fun b -> 
+            pState
+            >>= fun c ->
+                pZip
+                >>= fun d ->
+                    pCountry
+                    >>= fun e ->
+                        preturn (N4(a,b,c,d,e))
+
+
+(*
     skipString "N4" >>. pFSep >>. pCity
     >>= fun a ->
         pState
         >>= fun b ->
-            preturn (N4(a, b)) 
+            pZip
+            >>= fun c ->
+                pCountry
+                >>= fun d ->
+                    preturn (N4(a, b, c, d)) 
+    
+*)
 
-
+let pN4record = skipString "N4" >>. pFSep .>> pAddInf .>> pRSep 
