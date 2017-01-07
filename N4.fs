@@ -64,7 +64,10 @@ let pN4 =
                     >>= fun e ->
                         preturn (N4(a,b,c,d,e))
 
+
 let pN4record = skipString "N4" .>> pFSep >>. pN4 .>> pRSep 
+
+
 (*
     skipString "N4" >>. pFSep >>. pCity
     >>= fun a ->
@@ -78,4 +81,4 @@ let pN4record = skipString "N4" .>> pFSep >>. pN4 .>> pRSep
     
 *)
 
- 
+
