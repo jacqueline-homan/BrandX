@@ -34,62 +34,33 @@ let pCountry : Parser<Country option> =
     (opt 
         (manyMinMaxSatisfy 2 3 isAsciiLetter |>> Country)) .>> pRSep
 
-(*
-type AddressInfo = 
+
+type Location = 
     { city : City option
       state : State option
       zip : Zipcode option
       country : Country option}
 
-let pAddInf = 
+let pLoc = 
     pipe4 pCity pState pZip pCountry (fun m s z c ->
         {city = m
          state = s
          zip = z
-         country = c}) //.>> pRSep
-*)
+         country = c}) 
+
 type N4 = 
-    | N4 of City option * State option * Zipcode option * Country option //City * State * Zipcode * Country
+    | N4 of Location 
 
-let pN4 = 
-    skipString "N4" >>. pFSep >>. pCity
-    >>= fun a ->
-        pState
-        >>= fun b ->
-            pZip
-            >>= fun c ->
-                pCountry
-                >>= fun d ->
-                    preturn (N4(a, b, c, d)) 
-
-(*
-    pAddInf
-    >>= fun a -> 
-        pCity
-        >>= fun b -> 
-            pState
-            >>= fun c ->
-                pZip
-                >>= fun d ->
-                    pCountry
-                    >>= fun e ->
-                        preturn (N4(a,b,c,d,e))
-*)
-
-//let pN4record = skipString "N4" .>> pFSep >>. pN4 .>> pRSep 
-
-
-(*
-    skipString "N4" >>. pFSep >>. pCity
-    >>= fun a ->
-        pState
-        >>= fun b ->
-            pZip
-            >>= fun c ->
-                pCountry
-                >>= fun d ->
-                    preturn (N4(a, b, c, d)) 
+let pN4Record = 
+    pLoc
+    >>= fun x -> 
+        preturn (N4(x)) 
     
-*)
+
+let pN4 = skipString "N4" >>. pFSep >>. pN4Record
+  
+
+
+
 
 

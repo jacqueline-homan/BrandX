@@ -17,13 +17,23 @@ let pDet : Parser<Details option> =
     (opt 
         (manyMinMaxSatisfy 1 55 (isNoneOf "*~") |>> Details)) .>> pRSep
 
+type OptionalAddressInfo = 
+    { address : AddressInfo
+      optDetails : Details option}
+
+let pOptAdInf = 
+    pipe2 pAddy pDet (fun a d ->
+        { address = a
+          optDetails = d})
+
 type N3 = 
-    | N3 of AddressInfo * Details option
+    | N3 of OptionalAddressInfo 
+
+let pN3Record = 
+    pOptAdInf
+    >>= fun x -> 
+        preturn (N3(x))
+
 
 let pN3 : Parser<N3> = 
-    //skipString "N3" >>. pFSep >>. tuple2 (pAddy .>> pFSep) (pDet .>> pFSep) |>> N3 .>> pRSep
-    skipString "N3" >>. pFSep >>. pAddy 
-    >>= fun a ->
-        pDet 
-        >>= fun b ->
-            preturn (N3(a, b)) //.>> pRSep
+    skipString "N3" >>. pFSep >>. pN3Record 

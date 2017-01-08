@@ -27,11 +27,7 @@ let pIdCode : Parser<IdCode> = manyMinMaxSatisfy 2 80 (isNoneOf "*~") |>> IdCode
 type N1 =
     | N1 of Entity * Name * IdQual * IdCode
 
-(*
-let pN1 : Parser<N1> = 
-    skipString "N1" >>. pFSep >>. tuple4 (pEntity .>> pFSep) ( pName .>> pFSep) (pIdQual .>> pFSep) (pIdCode .>> pRSep)|>> N1
-*)
-//because I did not want a nasty tuple4 monster staring me down, I refactored
+
 let pN1 : Parser<N1> =
     skipString "N1" >>. pFSep >>. pEntity   
         >>= fun n ->
