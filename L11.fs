@@ -9,13 +9,13 @@ open FParsec
 type RefId = 
     | RefId of string 
 
-let pRefId : Parser<RefId> = manyMinMaxSatisfy 1 30 (isNoneOf "*~**:' '***'.") |>> RefId .>> pFSep
+let pRefId : Parser<RefId> = manyMinMaxSatisfy 1 30 (isNoneOf "*~**:***") |>> RefId .>> pFSep
 
 
 type RefQual = 
     | RefQual of string 
 
-let pRefQual : Parser<RefQual> = manyMinMaxSatisfy 2 3 (isNoneOf "*~**:' '***'.") |>> RefQual .>> pFSep
+let pRefQual : Parser<RefQual> = manyMinMaxSatisfy 2 3 (isNoneOf "*~**:***") |>> RefQual .>> pFSep
 
 
 type BusInstruct = 
@@ -29,7 +29,7 @@ let pBus =
 type Description =
     | Description of string 
 
-let pDesc : Parser<Description> = manyMinMaxSatisfy 1 80 (isNoneOf "*~**:' '") |>> Description .>> pFSep
+let pDesc : Parser<Description> = manyMinMaxSatisfy 1 80 (isNoneOf "*~**:***") |>> Description .>> pRSep
        
 type L11 =
     | L11 of BusInstruct * Description
@@ -42,4 +42,6 @@ let pL11Record =
         preturn (L11(x, y))
 
 let pL11 = 
-    skipString "L11" >>. pFSep >>. pL11Record .>> pRSep 
+    skipString "L11" >>. pFSep >>. pL11Record  
+
+
