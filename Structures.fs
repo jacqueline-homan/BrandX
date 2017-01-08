@@ -13,12 +13,12 @@ let pOFSep : Parser<_> = skipString "**" <?> "Double Field Separator"
 //The triple stars field separator
 let pTSep : Parser<_> = skipString "***" <?> "Triple Field Separator"
 // The record delimiter
-let pRSep : Parser<_> = skipChar '~' <?> "Record Separator"
+let pRSep : Parser<_> = skipChar '~' <?> "Segment Terminator"
 // Parse either separator
 let pASep = 
-    (attempt pFSep) <|> (attempt pRSep) <?> "Field or Record Separator"
+    (attempt pFSep) <|> (attempt pRSep) <?> "Field or Segment Separator"
 //ISA-16: Component Element Separator. Since this is not a data structure, we only need a function.
-let pElSep : Parser<_> = skipChar ':' <?> "Semicolon"
+let pElSep : Parser<_> = skipChar ':' <?> "Colon"
 let pPSep : Parser<_> = skipChar '.' <?> "Dot"
 let ws : Parser<_> = spaces <?> "Spaces"
 let pNbr l = manyMinMaxSatisfy l l isDigit .>> pASep <?> "Number"

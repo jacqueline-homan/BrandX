@@ -23,7 +23,7 @@ let pShipIdNo : Parser<Option<ShipIdNo>> =
          |>> ShipIdNo) .>> pOFSep
 
 type ShipPmt = 
-    | Collect
+    | Collect 
     | Prepaid
     | ThirdPartyPay
 
