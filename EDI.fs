@@ -32,7 +32,7 @@ let pEDI =
                             >>= fun g -> 
                                 pN3
                                 >>= fun h ->
-                                    pN4record
+                                    pN4
                                     >>= fun i ->
                                         preturn (EDI(a, b, c, d, e, f, g, h, i))
                                     
