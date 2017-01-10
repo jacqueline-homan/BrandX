@@ -74,5 +74,15 @@ let pN1 =
                         preturn (N1(a, b, c, d))
 
 
+// builder-name { expression }
 
 
+let mapOption f opt = 
+    match opt with 
+    | None -> None
+    | Some x -> Some (f x)
+
+let rec mapList f list =
+    match list with 
+    | [] -> []
+    | head :: tail -> (f head) :: (mapList f tail)

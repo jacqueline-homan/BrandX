@@ -1,10 +1,11 @@
-﻿module BrandX.L11
+﻿module BrandX.L11_2
 
 open System
 open System.Collections.Generic
 open System.IO
-open BrandX.Structures
 open FParsec
+open BrandX.Structures
+
 
 type RefId = 
     | RefId of string 
@@ -44,20 +45,6 @@ let pL11Record =
 let pL11 = 
     skipString "L11" >>. pFSep >>. pL11Record
 
-(*
-type L11Short = 
-    | L11Short of string
 
-let pL11Short : Parser<L11Short> = anyString 3 |>> L11Short .>> pFSep
 
-type State = 
-    | State of string 
 
-let pState : Parser<State> = anyString 2 |>> State .>> pRSep
-
-type L11Shorty =
-    | L11Shorty of L11Short * State
-
-let pPartialL11 :Parser<L11Shorty> = 
-    skipString "L11" >>. pFSep >>. tuple2 pL11Short pState |>> L11Shorty
-*)   
